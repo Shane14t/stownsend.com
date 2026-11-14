@@ -12,3 +12,6 @@
 Thumbs.db
 desktop.ini
 .vscode/
+
+# Full-size original photos (publish only the optimized versions)
+assets/headshot-original.*

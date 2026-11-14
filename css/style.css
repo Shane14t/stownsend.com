@@ -148,3 +148,15 @@ footer { margin-top: 64px; border-top: 1px solid var(--border); padding: 28px 0 
 .dg-arrow { fill: var(--accent); }
 .lesson { margin: 0 0 18px; }
 .lesson strong { display: block; }
+
+/* Hero with headshot */
+.hero-grid { display: flex; align-items: center; gap: 40px; justify-content: space-between; }
+.hero-text { flex: 1 1 auto; min-width: 0; }
+.headshot {
+  flex: 0 0 auto; width: 200px; height: 200px; border-radius: 50%;
+  object-fit: cover; border: 3px solid var(--border);
+}
+@media (max-width: 620px) {
+  .hero-grid { flex-direction: column-reverse; align-items: flex-start; gap: 24px; }
+  .headshot { width: 140px; height: 140px; }
+}
