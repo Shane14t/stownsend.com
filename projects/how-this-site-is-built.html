@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How this site is built | Shane Townsend</title>
+  <meta name="description" content="How stownsend.com is built and deployed: static HTML, GitHub, GitHub Actions and Azure Static Web Apps.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="../index.html">Shane Townsend</a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="../index.html#projects">&larr; Projects</a></li>
+          <li><button id="theme-toggle" type="button" aria-label="Toggle color theme">Dark mode</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+      <article>
+        <h1>How this site is built</h1>
+        <p>A small project, but it covers the same pieces a larger deployment does: source control, CI/CD, DNS, TLS and cost control.</p>
+
+        <h2>Goal</h2>
+        <p>A fast, secure resume site that costs almost nothing to run and updates automatically when I push a change.</p>
+
+        <h2>Architecture</h2>
+<pre><code>Developer (git push)
+      |
+      v
+GitHub repo (main) --&gt; GitHub Actions workflow
+                              |
+                              v
+                 Azure Static Web Apps (Free plan)
+                              |
+        stownsend.com (DNS at Namecheap, CNAME/validation)
+                              |
+                      HTTPS (free managed certificate)</code></pre>
+
+        <h2>Decisions</h2>
+        <ul>
+          <li><strong>Static HTML/CSS/JS</strong> &mdash; no server to patch, no database, nothing to exploit.</li>
+          <li><strong>Azure Static Web Apps (Free)</strong> &mdash; $0 hosting, free managed TLS, built-in GitHub deployment.</li>
+          <li><strong>GitHub Actions</strong> &mdash; every push to <code>main</code> deploys; pull requests get preview URLs.</li>
+          <li><strong>Custom domain</strong> &mdash; registered at Namecheap, validated and pointed at Azure with DNS records.</li>
+          <li><strong>Cost control</strong> &mdash; an Azure budget alert as a safety net, even on a free plan.</li>
+        </ul>
+
+        <h2>What I learned</h2>
+        <p class="note">Add your own notes here after the deployment: what went wrong, how you debugged DNS validation, what you'd do differently.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">&copy; <span id="year">2026</span> Shane Townsend</div>
+  </footer>
+  <script src="../js/main.js"></script>
+</body>
+</html>

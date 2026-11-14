@@ -1,0 +1,14 @@
+# Never commit credentials or secrets
+*creds*
+*Creds*
+*password*
+*.env
+.env*
+*.key
+*.pem
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
