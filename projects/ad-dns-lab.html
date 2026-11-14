@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Active Directory & DNS Lab | Shane Townsend</title>
+  <meta name="description" content="A Windows Server 2025 lab built to learn Active Directory and DNS hands-on: domain controller setup, zones, record types, network isolation and real troubleshooting.">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="../index.html">Shane Townsend</a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="../index.html#projects">&larr; Projects</a></li>
+          <li><button id="theme-toggle" type="button" aria-label="Toggle color theme">Dark mode</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+      <article>
+        <h1>Active Directory &amp; DNS Lab</h1>
+        <p>A Windows Server 2025 lab, built in VirtualBox, to learn DNS hands-on inside a real Active Directory environment &mdash; and to build toward Network+ and a system administrator role.</p>
+
+        <h2>Goal</h2>
+        <p>Most "Active Directory is broken" tickets are actually DNS problems. This lab builds a domain controller from scratch, breaks things on purpose, and documents the reasoning behind every step &mdash; not just the commands.</p>
+
+        <h2>Environment</h2>
+        <ul>
+          <li><strong>Hypervisor:</strong> VirtualBox</li>
+          <li><strong>Server:</strong> Windows Server 2025 Standard (Desktop Experience)</li>
+          <li><strong>Network:</strong> isolated NAT + Internal Network (<code>labnet</code>, 192.168.50.0/24) &mdash; the domain controller is not exposed to the home network</li>
+          <li><strong>Domain:</strong> <code>lab.local</code>, domain controller <code>DC01</code></li>
+        </ul>
+
+        <h2>What's built so far</h2>
+        <ul>
+          <li>VM built and Windows Server 2025 installed from the official evaluation ISO</li>
+          <li>Active Directory Domain Services and DNS Server role installed; DC01 promoted to the first domain controller</li>
+          <li>Network isolation corrected: separated outbound internet (NAT) from the actual lab network (isolated Internal Network), after catching the DC sitting directly on the home LAN during verification</li>
+          <li>Static IP and proper hostname (<code>DC01</code>) configured on the isolated network segment</li>
+          <li>Forward lookup zone (<code>lab.local</code>) and reverse lookup zone (<code>50.168.192.in-addr.arpa</code>) confirmed, verified AD's SRV records register correctly against DNS</li>
+          <li>In progress: A, PTR, CNAME and MX record types; forwarders; break-and-fix troubleshooting; PowerShell automation</li>
+        </ul>
+
+        <h2>What I learned</h2>
+
+        <p class="lesson"><strong>Isolate the domain controller, deliberately.</strong>
+          Verifying the setup turned up that the DC had been sitting directly on the home network with a manually-set
+          IP, not the isolated lab segment the plan called for. A domain controller runs DNS, Kerberos, LDAP and SMB &mdash;
+          all reachable by anything else on that network if it isn't isolated. Fixed by separating NAT (outbound only)
+          from an isolated Internal Network for the actual domain traffic.</p>
+
+        <p class="lesson"><strong>Domain credentials live in Active Directory, not the local SAM.</strong>
+          After losing the domain Administrator password with no snapshot to fall back on, the usual offline SAM-edit
+          trick didn't apply &mdash; AD's database (<code>ntds.dit</code>) is only mounted while the server is actually running.
+          Recovered by getting a SYSTEM-level prompt at the normal logon screen (via the Ease of Access accessibility
+          swap) <em>after</em> a normal boot, so <code>net user /domain</code> could talk to a live, running AD service
+          &mdash; then reverted the swap immediately afterward, since leaving it in place is a known local privilege-escalation
+          technique.</p>
+
+        <p class="lesson"><strong>SRV records are how AD actually finds itself.</strong>
+          <code>_ldap._tcp.dc._msdcs.lab.local</code> is the record every domain-joined machine queries to locate a
+          domain controller &mdash; not a hardcoded IP anywhere. Renaming the DC and re-IP'ing it required no manual DNS
+          edits at all; dynamic DNS re-registered the SRV record automatically within minutes.</p>
+
+        <p><a class="more" href="https://github.com/Shane14t/AD-DNS-LAB" target="_blank" rel="noopener">Full documentation on GitHub &rarr;</a></p>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">&copy; <span id="year">2026</span> Shane Townsend</div>
+  </footer>
+  <script src="../js/main.js"></script>
+</body>
+</html>
