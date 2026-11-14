@@ -137,3 +137,14 @@ footer { margin-top: 64px; border-top: 1px solid var(--border); padding: 28px 0 
 .notfound { padding-top: 96px; padding-bottom: 40px; }
 
 .card ul.tags { padding-left: 0; margin-top: 4px; }
+
+/* Architecture diagram (inline SVG) */
+.diagram { display: block; width: 100%; max-width: 440px; height: auto; margin: 24px auto; }
+.dg-box { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; }
+.dg-box.hl { stroke: var(--accent); stroke-width: 2; }
+.dg-title { fill: var(--text); font: 600 15px system-ui, -apple-system, "Segoe UI", sans-serif; }
+.dg-sub { fill: var(--muted); font: 13px system-ui, -apple-system, "Segoe UI", sans-serif; }
+.dg-line { stroke: var(--accent); stroke-width: 2; fill: none; }
+.dg-arrow { fill: var(--accent); }
+.lesson { margin: 0 0 18px; }
+.lesson strong { display: block; }
